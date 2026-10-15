@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_05401be2b8ffb8c99b5e14f8e4b53d95 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+<div style="
+position: fixed;
+bottom: 40px;
+left: 40px;
+width: 180px;
+z-index: 9999;
+background-color: white;
+border: 2px solid grey;
+padding: 12px;
+font-size: 14px;
+">
+
+<b>Neural Network Accident Risk</b>
+
+<br><br>
+
+<span style="color:red;font-size:20px;">●</span>
+HIGH
+
+<br>
+
+<span style="color:orange;font-size:20px;">●</span>
+MEDIUM
+
+<br>
+
+<span style="color:green;font-size:20px;">●</span>
+LOW
+
+</div>
+    
+            <div class="folium-map" id="map_05401be2b8ffb8c99b5e14f8e4b53d95" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_05401be2b8ffb8c99b5e14f8e4b53d95 = L.map(
+                "map_05401be2b8ffb8c99b5e14f8e4b53d95",
+                {
+                    center: [12.9716, 77.5946],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 11,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_90ba7c77c3bd794de77e385f9b5bb96f = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors, Tiles \u0026copy; Esri",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_90ba7c77c3bd794de77e385f9b5bb96f.addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+            var baseEsri = tile_layer_90ba7c77c3bd794de77e385f9b5bb96f;
+            var baseGray = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {"maxZoom": 16, "attribution": "Tiles \u0026copy; Esri"});
+            var baseTopo = L.tileLayer("https://tile.opentopomap.org/{z}/{x}/{y}.png", {"maxZoom": 17, "attribution": "\u0026copy; OpenTopoMap, OpenStreetMap contributors"});
+            L.control.layers({"Street (Esri)": baseEsri, "Light gray (Esri)": baseGray, "Topographic": baseTopo}, null, {"collapsed": false, "position": "topright"}).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+
+        
+    
+            var circle_marker_bdb8a2cd92ef0ecc31ca0c28c9ef026c = L.circleMarker(
+                [12.9415222221275, 77.608588888716],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_6bee5dc71e8e5f683bafac97e4721e80 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_d80662a755ca9822c1bc9ea25c4214f3 = $(`<div id="html_d80662a755ca9822c1bc9ea25c4214f3" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Adugodi</h3>          <hr>          <b>Predicted Accident Risk:</b>         4.09%          <br>          <b>Risk Level:</b>         LOW          <hr>          <b>Total Accidents:</b>         63          <br>          <b>Fatal Crashes:</b>         10          <br>          <b>Non-Fatal Crashes:</b>         53          <br>          <b>Fatal Rate:</b>         15.87%          <br>          <b>Accident Change:</b>         50.00%          <br>          <b>2-Year Rolling Average:</b>         30.5          <hr>          <b>Why is this location risky?</b>          <br><br>          • Strong increase in accidents      </div>     </div>`)[0];
+                popup_6bee5dc71e8e5f683bafac97e4721e80.setContent(html_d80662a755ca9822c1bc9ea25c4214f3);
+            
+        
+
+        circle_marker_bdb8a2cd92ef0ecc31ca0c28c9ef026c.bindPopup(popup_6bee5dc71e8e5f683bafac97e4721e80)
+        ;
+
+        
+    
+    
+            circle_marker_bdb8a2cd92ef0ecc31ca0c28c9ef026c.bindTooltip(
+                `<div>
+                     Adugodi | LOW | 4.1%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e59e4c8000571feb7029f340ef1fc25d = L.circleMarker(
+                [12.9716333327417, 77.6103305562667],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_f76194fee244c1891dc1c1e443ff0f59 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_7b20f2257e4ed14a42722f239a44f7ba = $(`<div id="html_7b20f2257e4ed14a42722f239a44f7ba" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Ashoknagar</h3>          <hr>          <b>Predicted Accident Risk:</b>         2.65%          <br>          <b>Risk Level:</b>         LOW          <hr>          <b>Total Accidents:</b>         38          <br>          <b>Fatal Crashes:</b>         6          <br>          <b>Non-Fatal Crashes:</b>         32          <br>          <b>Fatal Rate:</b>         15.79%          <br>          <b>Accident Change:</b>         8.57%          <br>          <b>2-Year Rolling Average:</b>         38.5          <hr>          <b>Why is this location risky?</b>          <br><br>          • Historical accident pattern indicates elevated risk      </div>     </div>`)[0];
+                popup_f76194fee244c1891dc1c1e443ff0f59.setContent(html_7b20f2257e4ed14a42722f239a44f7ba);
+            
+        
+
+        circle_marker_e59e4c8000571feb7029f340ef1fc25d.bindPopup(popup_f76194fee244c1891dc1c1e443ff0f59)
+        ;
+
+        
+    
+    
+            circle_marker_e59e4c8000571feb7029f340ef1fc25d.bindTooltip(
+                `<div>
+                     Ashoknagar | LOW | 2.7%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_77576bbdeeb3bbb86341bdd8b2ce23e9 = L.circleMarker(
+                [13.0195027775533, 77.6402194435504],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_04b529759c4a42793af4948036c634cf = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_862c668c6e0ed95e7c0546fcb09b0f0b = $(`<div id="html_862c668c6e0ed95e7c0546fcb09b0f0b" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Banasawadi</h3>          <hr>          <b>Predicted Accident Risk:</b>         55.19%          <br>          <b>Risk Level:</b>         MEDIUM          <hr>          <b>Total Accidents:</b>         91          <br>          <b>Fatal Crashes:</b>         14          <br>          <b>Non-Fatal Crashes:</b>         77          <br>          <b>Fatal Rate:</b>         15.38%          <br>          <b>Accident Change:</b>         -21.55%          <br>          <b>2-Year Rolling Average:</b>         107.5          <hr>          <b>Why is this location risky?</b>          <br><br>          • High recent accident average      </div>     </div>`)[0];
+                popup_04b529759c4a42793af4948036c634cf.setContent(html_862c668c6e0ed95e7c0546fcb09b0f0b);
+            
+        
+
+        circle_marker_77576bbdeeb3bbb86341bdd8b2ce23e9.bindPopup(popup_04b529759c4a42793af4948036c634cf)
+        ;
+
+        
+    
+    
+            circle_marker_77576bbdeeb3bbb86341bdd8b2ce23e9.bindTooltip(
+                `<div>
+                     Banasawadi | MEDIUM | 55.2%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_056fa8d1ea492f48b04b087747bf01b5 = L.circleMarker(
+                [12.8391916668387, 77.6617833330928],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_3c5a7a4d0de615a8afea603f578f614d = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_1f6a5b8271a4e14d056db2e4dfdcac7e = $(`<div id="html_1f6a5b8271a4e14d056db2e4dfdcac7e" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Electronic City</h3>          <hr>          <b>Predicted Accident Risk:</b>         97.37%          <br>          <b>Risk Level:</b>         HIGH          <hr>          <b>Total Accidents:</b>         196          <br>          <b>Fatal Crashes:</b>         38          <br>          <b>Non-Fatal Crashes:</b>         158          <br>          <b>Fatal Rate:</b>         19.39%          <br>          <b>Accident Change:</b>         41.01%          <br>          <b>2-Year Rolling Average:</b>         134.0          <hr>          <b>Why is this location risky?</b>          <br><br>          • High number of fatal crashes<br>• High non-fatal crash frequency<br>• Strong increase in accidents<br>• High recent accident average      </div>     </div>`)[0];
+                popup_3c5a7a4d0de615a8afea603f578f614d.setContent(html_1f6a5b8271a4e14d056db2e4dfdcac7e);
+            
+        
+
+        circle_marker_056fa8d1ea492f48b04b087747bf01b5.bindPopup(popup_3c5a7a4d0de615a8afea603f578f614d)
+        ;
+
+        
+    
+    
+            circle_marker_056fa8d1ea492f48b04b087747bf01b5.bindTooltip(
+                `<div>
+                     Electronic City | HIGH | 97.4%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_17689722318799f65561d6b6c749a15c = L.circleMarker(
+                [12.9847111107347, 77.5830472220116],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_851cb11cad9872bc34ee3d2c83724110 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_ae264a429071789ea4e29b293e91fcc7 = $(`<div id="html_ae264a429071789ea4e29b293e91fcc7" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 High Grounds</h3>          <hr>          <b>Predicted Accident Risk:</b>         3.23%          <br>          <b>Risk Level:</b>         LOW          <hr>          <b>Total Accidents:</b>         56          <br>          <b>Fatal Crashes:</b>         6          <br>          <b>Non-Fatal Crashes:</b>         50          <br>          <b>Fatal Rate:</b>         10.71%          <br>          <b>Accident Change:</b>         14.29%          <br>          <b>2-Year Rolling Average:</b>         43.5          <hr>          <b>Why is this location risky?</b>          <br><br>          • Historical accident pattern indicates elevated risk      </div>     </div>`)[0];
+                popup_851cb11cad9872bc34ee3d2c83724110.setContent(html_ae264a429071789ea4e29b293e91fcc7);
+            
+        
+
+        circle_marker_17689722318799f65561d6b6c749a15c.bindPopup(popup_851cb11cad9872bc34ee3d2c83724110)
+        ;
+
+        
+    
+    
+            circle_marker_17689722318799f65561d6b6c749a15c.bindTooltip(
+                `<div>
+                     High Grounds | LOW | 3.2%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_071736f57a5917845636316bba530079 = L.circleMarker(
+                [12.9209916672212, 77.6207250004286],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_5ad7320190c2f0ca50ba06ec22e04a7c = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_edba8843e7cc6977e44e31d6f8732069 = $(`<div id="html_edba8843e7cc6977e44e31d6f8732069" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Madivala</h3>          <hr>          <b>Predicted Accident Risk:</b>         7.39%          <br>          <b>Risk Level:</b>         LOW          <hr>          <b>Total Accidents:</b>         73          <br>          <b>Fatal Crashes:</b>         14          <br>          <b>Non-Fatal Crashes:</b>         59          <br>          <b>Fatal Rate:</b>         19.18%          <br>          <b>Accident Change:</b>         62.22%          <br>          <b>2-Year Rolling Average:</b>         49.5          <hr>          <b>Why is this location risky?</b>          <br><br>          • Strong increase in accidents      </div>     </div>`)[0];
+                popup_5ad7320190c2f0ca50ba06ec22e04a7c.setContent(html_edba8843e7cc6977e44e31d6f8732069);
+            
+        
+
+        circle_marker_071736f57a5917845636316bba530079.bindPopup(popup_5ad7320190c2f0ca50ba06ec22e04a7c)
+        ;
+
+        
+    
+    
+            circle_marker_071736f57a5917845636316bba530079.bindTooltip(
+                `<div>
+                     Madivala | LOW | 7.4%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_497031bd19f29a5c1ad91b3db3a10c44 = L.circleMarker(
+                [12.9132777784321, 77.6000611111641],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_d2defacf8c1822118ff7dc7349970304 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_7fd674925a941558ca85583109397e39 = $(`<div id="html_7fd674925a941558ca85583109397e39" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Mico Layout</h3>          <hr>          <b>Predicted Accident Risk:</b>         8.55%          <br>          <b>Risk Level:</b>         LOW          <hr>          <b>Total Accidents:</b>         88          <br>          <b>Fatal Crashes:</b>         14          <br>          <b>Non-Fatal Crashes:</b>         74          <br>          <b>Fatal Rate:</b>         15.91%          <br>          <b>Accident Change:</b>         66.04%          <br>          <b>2-Year Rolling Average:</b>         61.5          <hr>          <b>Why is this location risky?</b>          <br><br>          • Strong increase in accidents      </div>     </div>`)[0];
+                popup_d2defacf8c1822118ff7dc7349970304.setContent(html_7fd674925a941558ca85583109397e39);
+            
+        
+
+        circle_marker_497031bd19f29a5c1ad91b3db3a10c44.bindPopup(popup_d2defacf8c1822118ff7dc7349970304)
+        ;
+
+        
+    
+    
+            circle_marker_497031bd19f29a5c1ad91b3db3a10c44.bindTooltip(
+                `<div>
+                     Mico Layout | LOW | 8.5%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c783fab30b743f37effc41ad7c22769c = L.circleMarker(
+                [12.9879194436417, 77.6034222217947],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_27f514f79b6d831c528c1d4fb6329c61 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_98a7d1dda60805a22e40bdef4d2182c8 = $(`<div id="html_98a7d1dda60805a22e40bdef4d2182c8" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Shivajinagar</h3>          <hr>          <b>Predicted Accident Risk:</b>         1.25%          <br>          <b>Risk Level:</b>         LOW          <hr>          <b>Total Accidents:</b>         27          <br>          <b>Fatal Crashes:</b>         6          <br>          <b>Non-Fatal Crashes:</b>         21          <br>          <b>Fatal Rate:</b>         22.22%          <br>          <b>Accident Change:</b>         8.00%          <br>          <b>2-Year Rolling Average:</b>         18.0          <hr>          <b>Why is this location risky?</b>          <br><br>          • High fatal-crash rate      </div>     </div>`)[0];
+                popup_27f514f79b6d831c528c1d4fb6329c61.setContent(html_98a7d1dda60805a22e40bdef4d2182c8);
+            
+        
+
+        circle_marker_c783fab30b743f37effc41ad7c22769c.bindPopup(popup_27f514f79b6d831c528c1d4fb6329c61)
+        ;
+
+        
+    
+    
+            circle_marker_c783fab30b743f37effc41ad7c22769c.bindTooltip(
+                `<div>
+                     Shivajinagar | LOW | 1.3%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a3679bd775511a5b5ff52f19067ef02c = L.circleMarker(
+                [12.9942472220074, 77.7571611107818],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_3a6086aefd7900e7623f9fa98bfe62cb = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_8c0a03decf1c82913ce909806d0ab031 = $(`<div id="html_8c0a03decf1c82913ce909806d0ab031" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Whitefield</h3>          <hr>          <b>Predicted Accident Risk:</b>         97.64%          <br>          <b>Risk Level:</b>         HIGH          <hr>          <b>Total Accidents:</b>         223          <br>          <b>Fatal Crashes:</b>         43          <br>          <b>Non-Fatal Crashes:</b>         180          <br>          <b>Fatal Rate:</b>         19.28%          <br>          <b>Accident Change:</b>         34.34%          <br>          <b>2-Year Rolling Average:</b>         128.5          <hr>          <b>Why is this location risky?</b>          <br><br>          • High number of fatal crashes<br>• High non-fatal crash frequency<br>• Strong increase in accidents<br>• High recent accident average<br>• High fatal-crash history      </div>     </div>`)[0];
+                popup_3a6086aefd7900e7623f9fa98bfe62cb.setContent(html_8c0a03decf1c82913ce909806d0ab031);
+            
+        
+
+        circle_marker_a3679bd775511a5b5ff52f19067ef02c.bindPopup(popup_3a6086aefd7900e7623f9fa98bfe62cb)
+        ;
+
+        
+    
+    
+            circle_marker_a3679bd775511a5b5ff52f19067ef02c.bindTooltip(
+                `<div>
+                     Whitefield | HIGH | 97.6%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_308f84d9f865a57f357db85a1d3f300b = L.circleMarker(
+                [12.9501435008387, 77.5956167185657],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_ba30ba64144dd0fbc4131a01bb8fc598 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_19a261b80640e54d50abd0fda241a3b4 = $(`<div id="html_19a261b80640e54d50abd0fda241a3b4" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Wilsongarden</h3>          <hr>          <b>Predicted Accident Risk:</b>         5.35%          <br>          <b>Risk Level:</b>         LOW          <hr>          <b>Total Accidents:</b>         65          <br>          <b>Fatal Crashes:</b>         6          <br>          <b>Non-Fatal Crashes:</b>         59          <br>          <b>Fatal Rate:</b>         9.23%          <br>          <b>Accident Change:</b>         20.37%          <br>          <b>2-Year Rolling Average:</b>         56.0          <hr>          <b>Why is this location risky?</b>          <br><br>          • Strong increase in accidents      </div>     </div>`)[0];
+                popup_ba30ba64144dd0fbc4131a01bb8fc598.setContent(html_19a261b80640e54d50abd0fda241a3b4);
+            
+        
+
+        circle_marker_308f84d9f865a57f357db85a1d3f300b.bindPopup(popup_ba30ba64144dd0fbc4131a01bb8fc598)
+        ;
+
+        
+    
+    
+            circle_marker_308f84d9f865a57f357db85a1d3f300b.bindTooltip(
+                `<div>
+                     Wilsongarden | LOW | 5.3%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2cd2957c57379e0f758b63b16eec4d8b = L.circleMarker(
+                [13.1723696635458, 77.6335682558611],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_7b59250a9fa98b39c75f9d2cec1242ad = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_2d844eb09deff1c8b47b07bbfa12d720 = $(`<div id="html_2d844eb09deff1c8b47b07bbfa12d720" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Chikkajala</h3>          <hr>          <b>Predicted Accident Risk:</b>         96.41%          <br>          <b>Risk Level:</b>         HIGH          <hr>          <b>Total Accidents:</b>         137          <br>          <b>Fatal Crashes:</b>         36          <br>          <b>Non-Fatal Crashes:</b>         101          <br>          <b>Fatal Rate:</b>         26.28%          <br>          <b>Accident Change:</b>         -21.26%          <br>          <b>2-Year Rolling Average:</b>         181.5          <hr>          <b>Why is this location risky?</b>          <br><br>          • High number of fatal crashes<br>• High non-fatal crash frequency<br>• High recent accident average<br>• High fatal-crash rate<br>• High fatal-crash history      </div>     </div>`)[0];
+                popup_7b59250a9fa98b39c75f9d2cec1242ad.setContent(html_2d844eb09deff1c8b47b07bbfa12d720);
+            
+        
+
+        circle_marker_2cd2957c57379e0f758b63b16eec4d8b.bindPopup(popup_7b59250a9fa98b39c75f9d2cec1242ad)
+        ;
+
+        
+    
+    
+            circle_marker_2cd2957c57379e0f758b63b16eec4d8b.bindTooltip(
+                `<div>
+                     Chikkajala | HIGH | 96.4%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0d1f5c488f7ff802865d18ef2c2102fb = L.circleMarker(
+                [13.0424089995835, 77.5889760000564],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_ed333fc5f2dd4971be488dbb23f5b230 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_70931ab7c9b172e7637b90eab930724a = $(`<div id="html_70931ab7c9b172e7637b90eab930724a" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Hebbal</h3>          <hr>          <b>Predicted Accident Risk:</b>         83.79%          <br>          <b>Risk Level:</b>         HIGH          <hr>          <b>Total Accidents:</b>         144          <br>          <b>Fatal Crashes:</b>         24          <br>          <b>Non-Fatal Crashes:</b>         120          <br>          <b>Fatal Rate:</b>         16.67%          <br>          <b>Accident Change:</b>         42.57%          <br>          <b>2-Year Rolling Average:</b>         108.0          <hr>          <b>Why is this location risky?</b>          <br><br>          • High non-fatal crash frequency<br>• Strong increase in accidents<br>• High recent accident average      </div>     </div>`)[0];
+                popup_ed333fc5f2dd4971be488dbb23f5b230.setContent(html_70931ab7c9b172e7637b90eab930724a);
+            
+        
+
+        circle_marker_0d1f5c488f7ff802865d18ef2c2102fb.bindPopup(popup_ed333fc5f2dd4971be488dbb23f5b230)
+        ;
+
+        
+    
+    
+            circle_marker_0d1f5c488f7ff802865d18ef2c2102fb.bindTooltip(
+                `<div>
+                     Hebbal | HIGH | 83.8%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_50c933e93aef0b6d8a0cdb38fa439255 = L.circleMarker(
+                [13.0949366661803, 77.5940811109578],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_52934aa9ec92acb8fd8361c1f343831d = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_7759c05960bfa325c8cab8bb5fd814ad = $(`<div id="html_7759c05960bfa325c8cab8bb5fd814ad" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Yelahanka</h3>          <hr>          <b>Predicted Accident Risk:</b>         99.47%          <br>          <b>Risk Level:</b>         HIGH          <hr>          <b>Total Accidents:</b>         236          <br>          <b>Fatal Crashes:</b>         58          <br>          <b>Non-Fatal Crashes:</b>         178          <br>          <b>Fatal Rate:</b>         24.58%          <br>          <b>Accident Change:</b>         15.69%          <br>          <b>2-Year Rolling Average:</b>         188.0          <hr>          <b>Why is this location risky?</b>          <br><br>          • High number of fatal crashes<br>• High non-fatal crash frequency<br>• High recent accident average<br>• High fatal-crash rate<br>• High fatal-crash history      </div>     </div>`)[0];
+                popup_52934aa9ec92acb8fd8361c1f343831d.setContent(html_7759c05960bfa325c8cab8bb5fd814ad);
+            
+        
+
+        circle_marker_50c933e93aef0b6d8a0cdb38fa439255.bindPopup(popup_52934aa9ec92acb8fd8361c1f343831d)
+        ;
+
+        
+    
+    
+            circle_marker_50c933e93aef0b6d8a0cdb38fa439255.bindTooltip(
+                `<div>
+                     Yelahanka | HIGH | 99.5%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a51dbf5634ff946da985e88ee29434bb = L.circleMarker(
+                [12.9966521669095, 77.5696064323857],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_d50a060df218daa84f915a440cb47b66 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_d7a130f81cfab58b09a7a9c8b5f43c1c = $(`<div id="html_d7a130f81cfab58b09a7a9c8b5f43c1c" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Malleshwaram</h3>          <hr>          <b>Predicted Accident Risk:</b>         7.96%          <br>          <b>Risk Level:</b>         LOW          <hr>          <b>Total Accidents:</b>         99          <br>          <b>Fatal Crashes:</b>         18          <br>          <b>Non-Fatal Crashes:</b>         81          <br>          <b>Fatal Rate:</b>         18.18%          <br>          <b>Accident Change:</b>         76.79%          <br>          <b>2-Year Rolling Average:</b>         46.0          <hr>          <b>Why is this location risky?</b>          <br><br>          • Strong increase in accidents      </div>     </div>`)[0];
+                popup_d50a060df218daa84f915a440cb47b66.setContent(html_d7a130f81cfab58b09a7a9c8b5f43c1c);
+            
+        
+
+        circle_marker_a51dbf5634ff946da985e88ee29434bb.bindPopup(popup_d50a060df218daa84f915a440cb47b66)
+        ;
+
+        
+    
+    
+            circle_marker_a51dbf5634ff946da985e88ee29434bb.bindTooltip(
+                `<div>
+                     Malleshwaram | LOW | 8.0%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_29ffb0a6954c815f542f9087b43886fa = L.circleMarker(
+                [13.0360555191998, 77.5211641802431],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_953b24457b0f01b0ef14ea5c91c5096d = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_c1bcb9b5ef0b13406736bc29fb63a4de = $(`<div id="html_c1bcb9b5ef0b13406736bc29fb63a4de" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Peenya</h3>          <hr>          <b>Predicted Accident Risk:</b>         97.03%          <br>          <b>Risk Level:</b>         HIGH          <hr>          <b>Total Accidents:</b>         192          <br>          <b>Fatal Crashes:</b>         32          <br>          <b>Non-Fatal Crashes:</b>         160          <br>          <b>Fatal Rate:</b>         16.67%          <br>          <b>Accident Change:</b>         7.87%          <br>          <b>2-Year Rolling Average:</b>         151.5          <hr>          <b>Why is this location risky?</b>          <br><br>          • High number of fatal crashes<br>• High non-fatal crash frequency<br>• High recent accident average<br>• High fatal-crash history      </div>     </div>`)[0];
+                popup_953b24457b0f01b0ef14ea5c91c5096d.setContent(html_c1bcb9b5ef0b13406736bc29fb63a4de);
+            
+        
+
+        circle_marker_29ffb0a6954c815f542f9087b43886fa.bindPopup(popup_953b24457b0f01b0ef14ea5c91c5096d)
+        ;
+
+        
+    
+    
+            circle_marker_29ffb0a6954c815f542f9087b43886fa.bindTooltip(
+                `<div>
+                     Peenya | HIGH | 97.0%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e1020729e1c56195088ee789ed0f8dd5 = L.circleMarker(
+                [12.9676958598672, 77.5400378966948],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_05d9bf444b69b16443abeb226f913c5f = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_b2958d8686395950ac61a7e179ef434b = $(`<div id="html_b2958d8686395950ac61a7e179ef434b" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Vijayanagar</h3>          <hr>          <b>Predicted Accident Risk:</b>         29.65%          <br>          <b>Risk Level:</b>         LOW          <hr>          <b>Total Accidents:</b>         79          <br>          <b>Fatal Crashes:</b>         16          <br>          <b>Non-Fatal Crashes:</b>         63          <br>          <b>Fatal Rate:</b>         20.25%          <br>          <b>Accident Change:</b>         -5.95%          <br>          <b>2-Year Rolling Average:</b>         89.0          <hr>          <b>Why is this location risky?</b>          <br><br>          • High fatal-crash rate      </div>     </div>`)[0];
+                popup_05d9bf444b69b16443abeb226f913c5f.setContent(html_b2958d8686395950ac61a7e179ef434b);
+            
+        
+
+        circle_marker_e1020729e1c56195088ee789ed0f8dd5.bindPopup(popup_05d9bf444b69b16443abeb226f913c5f)
+        ;
+
+        
+    
+    
+            circle_marker_e1020729e1c56195088ee789ed0f8dd5.bindTooltip(
+                `<div>
+                     Vijayanagar | LOW | 29.6%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d0cd06cca91a9836feac859d48b8883e = L.circleMarker(
+                [12.9745057476114, 77.5750017556543],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_2dd6d1038fc3eb0e5183a4900084606c = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_51158312ccd329b3260bb71edeaa058f = $(`<div id="html_51158312ccd329b3260bb71edeaa058f" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Upparpet</h3>          <hr>          <b>Predicted Accident Risk:</b>         2.10%          <br>          <b>Risk Level:</b>         LOW          <hr>          <b>Total Accidents:</b>         29          <br>          <b>Fatal Crashes:</b>         9          <br>          <b>Non-Fatal Crashes:</b>         20          <br>          <b>Fatal Rate:</b>         31.03%          <br>          <b>Accident Change:</b>         7.41%          <br>          <b>2-Year Rolling Average:</b>         24.0          <hr>          <b>Why is this location risky?</b>          <br><br>          • High fatal-crash rate      </div>     </div>`)[0];
+                popup_2dd6d1038fc3eb0e5183a4900084606c.setContent(html_51158312ccd329b3260bb71edeaa058f);
+            
+        
+
+        circle_marker_d0cd06cca91a9836feac859d48b8883e.bindPopup(popup_2dd6d1038fc3eb0e5183a4900084606c)
+        ;
+
+        
+    
+    
+            circle_marker_d0cd06cca91a9836feac859d48b8883e.bindTooltip(
+                `<div>
+                     Upparpet | LOW | 2.1%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_644dcebd06ae7b5b3df9f3c58e5e3921 = L.circleMarker(
+                [12.9707580957203, 77.5736625414289],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_8c2a58daa07c6b6d081cbe8fbfe6c071 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_ed83472649495a99da667fc0be1d2f1d = $(`<div id="html_ed83472649495a99da667fc0be1d2f1d" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 City Market</h3>          <hr>          <b>Predicted Accident Risk:</b>         1.15%          <br>          <b>Risk Level:</b>         LOW          <hr>          <b>Total Accidents:</b>         32          <br>          <b>Fatal Crashes:</b>         9          <br>          <b>Non-Fatal Crashes:</b>         23          <br>          <b>Fatal Rate:</b>         28.12%          <br>          <b>Accident Change:</b>         77.78%          <br>          <b>2-Year Rolling Average:</b>         12.5          <hr>          <b>Why is this location risky?</b>          <br><br>          • Strong increase in accidents<br>• High fatal-crash rate      </div>     </div>`)[0];
+                popup_8c2a58daa07c6b6d081cbe8fbfe6c071.setContent(html_ed83472649495a99da667fc0be1d2f1d);
+            
+        
+
+        circle_marker_644dcebd06ae7b5b3df9f3c58e5e3921.bindPopup(popup_8c2a58daa07c6b6d081cbe8fbfe6c071)
+        ;
+
+        
+    
+    
+            circle_marker_644dcebd06ae7b5b3df9f3c58e5e3921.bindTooltip(
+                `<div>
+                     City Market | LOW | 1.2%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_1d6f6dc4aa3091a3a9422fae7b9dc731 = L.circleMarker(
+                [12.9746540000128, 77.5510560002498],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_46441e023aef7e2a120ed5faa6fb0e95 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_1ddeb02f1e62b2ca2203d20d6769107b = $(`<div id="html_1ddeb02f1e62b2ca2203d20d6769107b" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Magadi Road</h3>          <hr>          <b>Predicted Accident Risk:</b>         1.00%          <br>          <b>Risk Level:</b>         LOW          <hr>          <b>Total Accidents:</b>         50          <br>          <b>Fatal Crashes:</b>         7          <br>          <b>Non-Fatal Crashes:</b>         43          <br>          <b>Fatal Rate:</b>         14.00%          <br>          <b>Accident Change:</b>         150.00%          <br>          <b>2-Year Rolling Average:</b>         24.0          <hr>          <b>Why is this location risky?</b>          <br><br>          • Strong increase in accidents      </div>     </div>`)[0];
+                popup_46441e023aef7e2a120ed5faa6fb0e95.setContent(html_1ddeb02f1e62b2ca2203d20d6769107b);
+            
+        
+
+        circle_marker_1d6f6dc4aa3091a3a9422fae7b9dc731.bindPopup(popup_46441e023aef7e2a120ed5faa6fb0e95)
+        ;
+
+        
+    
+    
+            circle_marker_1d6f6dc4aa3091a3a9422fae7b9dc731.bindTooltip(
+                `<div>
+                     Magadi Road | LOW | 1.0%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_af77a30353b1469ae12c43115bea5b61 = L.circleMarker(
+                [12.9285800003268, 77.5813900000882],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_75417035bd9ba3cc41af61e6d8c8b551 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_9ecc4c9e1ffaa214e8c47ec8315d4737 = $(`<div id="html_9ecc4c9e1ffaa214e8c47ec8315d4737" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Jayanagar</h3>          <hr>          <b>Predicted Accident Risk:</b>         18.12%          <br>          <b>Risk Level:</b>         LOW          <hr>          <b>Total Accidents:</b>         90          <br>          <b>Fatal Crashes:</b>         13          <br>          <b>Non-Fatal Crashes:</b>         77          <br>          <b>Fatal Rate:</b>         14.44%          <br>          <b>Accident Change:</b>         -3.23%          <br>          <b>2-Year Rolling Average:</b>         76.5          <hr>          <b>Why is this location risky?</b>          <br><br>          • Historical accident pattern indicates elevated risk      </div>     </div>`)[0];
+                popup_75417035bd9ba3cc41af61e6d8c8b551.setContent(html_9ecc4c9e1ffaa214e8c47ec8315d4737);
+            
+        
+
+        circle_marker_af77a30353b1469ae12c43115bea5b61.bindPopup(popup_75417035bd9ba3cc41af61e6d8c8b551)
+        ;
+
+        
+    
+    
+            circle_marker_af77a30353b1469ae12c43115bea5b61.bindTooltip(
+                `<div>
+                     Jayanagar | LOW | 18.1%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0f4748529aa8246acc7a638f691163fa = L.circleMarker(
+                [12.9420741309031, 77.5742712536436],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_daf5615156eed0b569827222f0297d0e = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_ef0f33adf928c1524fbe02200442a138 = $(`<div id="html_ef0f33adf928c1524fbe02200442a138" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Basavanagudi</h3>          <hr>          <b>Predicted Accident Risk:</b>         11.59%          <br>          <b>Risk Level:</b>         LOW          <hr>          <b>Total Accidents:</b>         102          <br>          <b>Fatal Crashes:</b>         3          <br>          <b>Non-Fatal Crashes:</b>         99          <br>          <b>Fatal Rate:</b>         2.94%          <br>          <b>Accident Change:</b>         20.00%          <br>          <b>2-Year Rolling Average:</b>         66.5          <hr>          <b>Why is this location risky?</b>          <br><br>          • Strong increase in accidents      </div>     </div>`)[0];
+                popup_daf5615156eed0b569827222f0297d0e.setContent(html_ef0f33adf928c1524fbe02200442a138);
+            
+        
+
+        circle_marker_0f4748529aa8246acc7a638f691163fa.bindPopup(popup_daf5615156eed0b569827222f0297d0e)
+        ;
+
+        
+    
+    
+            circle_marker_0f4748529aa8246acc7a638f691163fa.bindTooltip(
+                `<div>
+                     Basavanagudi | LOW | 11.6%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_71c30021d77a04bdfd1ab72f659f7a33 = L.circleMarker(
+                [13.0486969233808, 77.5494851412181],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_a0a40a3815f7f6c78ec38421fe88a85d = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_db9ce7ec0c124a3467e47d48a0b6ff60 = $(`<div id="html_db9ce7ec0c124a3467e47d48a0b6ff60" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Jalahalli</h3>          <hr>          <b>Predicted Accident Risk:</b>         58.91%          <br>          <b>Risk Level:</b>         MEDIUM          <hr>          <b>Total Accidents:</b>         102          <br>          <b>Fatal Crashes:</b>         28          <br>          <b>Non-Fatal Crashes:</b>         74          <br>          <b>Fatal Rate:</b>         27.45%          <br>          <b>Accident Change:</b>         27.50%          <br>          <b>2-Year Rolling Average:</b>         85.0          <hr>          <b>Why is this location risky?</b>          <br><br>          • Strong increase in accidents<br>• High fatal-crash rate      </div>     </div>`)[0];
+                popup_a0a40a3815f7f6c78ec38421fe88a85d.setContent(html_db9ce7ec0c124a3467e47d48a0b6ff60);
+            
+        
+
+        circle_marker_71c30021d77a04bdfd1ab72f659f7a33.bindPopup(popup_a0a40a3815f7f6c78ec38421fe88a85d)
+        ;
+
+        
+    
+    
+            circle_marker_71c30021d77a04bdfd1ab72f659f7a33.bindTooltip(
+                `<div>
+                     Jalahalli | MEDIUM | 58.9%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_80e756edccf384834acf9731310b4ae6 = L.circleMarker(
+                [12.9945588996388, 77.5542211644862],
+                {"bubblingMouseEvents": true, "color": "orange", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "orange", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_536bb6c98209015b65e87e5b3df6bbd0 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_fba703c2e03f08ac82e3d7a12c5e0dbe = $(`<div id="html_fba703c2e03f08ac82e3d7a12c5e0dbe" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Rajajinagar</h3>          <hr>          <b>Predicted Accident Risk:</b>         48.56%          <br>          <b>Risk Level:</b>         MEDIUM          <hr>          <b>Total Accidents:</b>         102          <br>          <b>Fatal Crashes:</b>         16          <br>          <b>Non-Fatal Crashes:</b>         86          <br>          <b>Fatal Rate:</b>         15.69%          <br>          <b>Accident Change:</b>         0.99%          <br>          <b>2-Year Rolling Average:</b>         83.5          <hr>          <b>Why is this location risky?</b>          <br><br>          • Historical accident pattern indicates elevated risk      </div>     </div>`)[0];
+                popup_536bb6c98209015b65e87e5b3df6bbd0.setContent(html_fba703c2e03f08ac82e3d7a12c5e0dbe);
+            
+        
+
+        circle_marker_80e756edccf384834acf9731310b4ae6.bindPopup(popup_536bb6c98209015b65e87e5b3df6bbd0)
+        ;
+
+        
+    
+    
+            circle_marker_80e756edccf384834acf9731310b4ae6.bindTooltip(
+                `<div>
+                     Rajajinagar | MEDIUM | 48.6%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_71b93a9b743b410383dd11d2f14d1867 = L.circleMarker(
+                [12.9821666670146, 77.5327008333068],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_bcf0593c57610a2702459e191c38f824 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_c9df76dbbe7fe3d5553af1909c304ed9 = $(`<div id="html_c9df76dbbe7fe3d5553af1909c304ed9" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Kamakshipalya</h3>          <hr>          <b>Predicted Accident Risk:</b>         99.16%          <br>          <b>Risk Level:</b>         HIGH          <hr>          <b>Total Accidents:</b>         241          <br>          <b>Fatal Crashes:</b>         40          <br>          <b>Non-Fatal Crashes:</b>         201          <br>          <b>Fatal Rate:</b>         16.60%          <br>          <b>Accident Change:</b>         20.50%          <br>          <b>2-Year Rolling Average:</b>         178.5          <hr>          <b>Why is this location risky?</b>          <br><br>          • High number of fatal crashes<br>• High non-fatal crash frequency<br>• Strong increase in accidents<br>• High recent accident average<br>• High fatal-crash history      </div>     </div>`)[0];
+                popup_bcf0593c57610a2702459e191c38f824.setContent(html_c9df76dbbe7fe3d5553af1909c304ed9);
+            
+        
+
+        circle_marker_71b93a9b743b410383dd11d2f14d1867.bindPopup(popup_bcf0593c57610a2702459e191c38f824)
+        ;
+
+        
+    
+    
+            circle_marker_71b93a9b743b410383dd11d2f14d1867.bindTooltip(
+                `<div>
+                     Kamakshipalya | HIGH | 99.2%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_52c411eef30235f2b7d60a71ead5b02f = L.circleMarker(
+                [12.9105461664563, 77.4815072286419],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_65200f9d40d644a47536f76dd61eb8ad = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_b864308250b4cb59189591cffed2189b = $(`<div id="html_b864308250b4cb59189591cffed2189b" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Kengeri</h3>          <hr>          <b>Predicted Accident Risk:</b>         98.62%          <br>          <b>Risk Level:</b>         HIGH          <hr>          <b>Total Accidents:</b>         279          <br>          <b>Fatal Crashes:</b>         58          <br>          <b>Non-Fatal Crashes:</b>         221          <br>          <b>Fatal Rate:</b>         20.79%          <br>          <b>Accident Change:</b>         130.58%          <br>          <b>2-Year Rolling Average:</b>         114.0          <hr>          <b>Why is this location risky?</b>          <br><br>          • High number of fatal crashes<br>• High non-fatal crash frequency<br>• Strong increase in accidents<br>• High recent accident average<br>• High fatal-crash rate<br>• High fatal-crash history      </div>     </div>`)[0];
+                popup_65200f9d40d644a47536f76dd61eb8ad.setContent(html_b864308250b4cb59189591cffed2189b);
+            
+        
+
+        circle_marker_52c411eef30235f2b7d60a71ead5b02f.bindPopup(popup_65200f9d40d644a47536f76dd61eb8ad)
+        ;
+
+        
+    
+    
+            circle_marker_52c411eef30235f2b7d60a71ead5b02f.bindTooltip(
+                `<div>
+                     Kengeri | HIGH | 98.6%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e101b84201e6259997e968a6e0a49385 = L.circleMarker(
+                [12.9289878325586, 77.5677911256067],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_aa7790bed05c2a90fd9ae6aaf1668775 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_5e7bb83fab4437bca56b3e097bad2259 = $(`<div id="html_5e7bb83fab4437bca56b3e097bad2259" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Banashankari</h3>          <hr>          <b>Predicted Accident Risk:</b>         17.03%          <br>          <b>Risk Level:</b>         LOW          <hr>          <b>Total Accidents:</b>         90          <br>          <b>Fatal Crashes:</b>         15          <br>          <b>Non-Fatal Crashes:</b>         75          <br>          <b>Fatal Rate:</b>         16.67%          <br>          <b>Accident Change:</b>         34.33%          <br>          <b>2-Year Rolling Average:</b>         68.5          <hr>          <b>Why is this location risky?</b>          <br><br>          • Strong increase in accidents      </div>     </div>`)[0];
+                popup_aa7790bed05c2a90fd9ae6aaf1668775.setContent(html_5e7bb83fab4437bca56b3e097bad2259);
+            
+        
+
+        circle_marker_e101b84201e6259997e968a6e0a49385.bindPopup(popup_aa7790bed05c2a90fd9ae6aaf1668775)
+        ;
+
+        
+    
+    
+            circle_marker_e101b84201e6259997e968a6e0a49385.bindTooltip(
+                `<div>
+                     Banashankari | LOW | 17.0%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7b2b57c0aa8cbb26a67f437ff0e94144 = L.circleMarker(
+                [12.9609817288076, 77.5681528496062],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_72773c87f36e6f95b78ca8d2815c68fa = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_97d9bbd5c7e5e615660e0fa0fad28838 = $(`<div id="html_97d9bbd5c7e5e615660e0fa0fad28838" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 Chickpet</h3>          <hr>          <b>Predicted Accident Risk:</b>         5.23%          <br>          <b>Risk Level:</b>         LOW          <hr>          <b>Total Accidents:</b>         46          <br>          <b>Fatal Crashes:</b>         9          <br>          <b>Non-Fatal Crashes:</b>         37          <br>          <b>Fatal Rate:</b>         19.57%          <br>          <b>Accident Change:</b>         15.00%          <br>          <b>2-Year Rolling Average:</b>         35.0          <hr>          <b>Why is this location risky?</b>          <br><br>          • Historical accident pattern indicates elevated risk      </div>     </div>`)[0];
+                popup_72773c87f36e6f95b78ca8d2815c68fa.setContent(html_97d9bbd5c7e5e615660e0fa0fad28838);
+            
+        
+
+        circle_marker_7b2b57c0aa8cbb26a67f437ff0e94144.bindPopup(popup_72773c87f36e6f95b78ca8d2815c68fa)
+        ;
+
+        
+    
+    
+            circle_marker_7b2b57c0aa8cbb26a67f437ff0e94144.bindTooltip(
+                `<div>
+                     Chickpet | LOW | 5.2%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d96d0bd497c86b1eaa60af4b7ac5776d = L.circleMarker(
+                [12.9219612532365, 77.6616669484753],
+                {"bubblingMouseEvents": true, "color": "green", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "green", "fillOpacity": 0.75, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_05401be2b8ffb8c99b5e14f8e4b53d95);
+        
+    
+        var popup_1e71e92832c7bf7f6f8f2127bafda57f = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_a6661801e14f48a45a24586664011937 = $(`<div id="html_a6661801e14f48a45a24586664011937" style="width: 100.0%; height: 100.0%;">     <div style="width:330px">          <h3>🚨 HSR Layout</h3>          <hr>          <b>Predicted Accident Risk:</b>         17.32%          <br>          <b>Risk Level:</b>         LOW          <hr>          <b>Total Accidents:</b>         56          <br>          <b>Fatal Crashes:</b>         16          <br>          <b>Non-Fatal Crashes:</b>         40          <br>          <b>Fatal Rate:</b>         28.57%          <br>          <b>Accident Change:</b>         -12.50%          <br>          <b>2-Year Rolling Average:</b>         60.0          <hr>          <b>Why is this location risky?</b>          <br><br>          • High fatal-crash rate      </div>     </div>`)[0];
+                popup_1e71e92832c7bf7f6f8f2127bafda57f.setContent(html_a6661801e14f48a45a24586664011937);
+            
+        
+
+        circle_marker_d96d0bd497c86b1eaa60af4b7ac5776d.bindPopup(popup_1e71e92832c7bf7f6f8f2127bafda57f)
+        ;
+
+        
+    
+    
+            circle_marker_d96d0bd497c86b1eaa60af4b7ac5776d.bindTooltip(
+                `<div>
+                     HSR Layout | LOW | 17.3%
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+</script>
+</html>
